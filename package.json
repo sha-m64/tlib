@@ -1,0 +1,19 @@
+{
+  "name": "tlib",
+  "version": "0.0.1",
+  "description": "fetch template from repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sha-m64/tlib.git"
+  },
+  "author": "sha-m64",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/sha-m64/tlib/issues"
+  },
+  "homepage": "https://github.com/sha-m64/tlib#readme"
+}

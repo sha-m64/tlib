@@ -7,7 +7,7 @@ const { tlib } = require(__dirname + '/src/Tlib.bs.js')
 function help({verbose = false, exit_code = 0} = {})
 {
 
-  const invocation = argv.slice(0, 2).join(' ') // "npx github:sha-m64/tlib"
+  const invocation = "npx github:sha-m64/tlib" // argv.slice(0, 2).join(' ') //
   console.log("USAGE: %s -FLAG value ... file [file ...]", invocation)
   console.log("\t-h for help")
 
@@ -26,17 +26,20 @@ function help({verbose = false, exit_code = 0} = {})
 }
 
 function parse_args(argv) {
-  let files = [], 
+  let files = [],
     save_to = process.cwd(),
     repo
-
-  let i = 0
 
   while (argv.length) {
     arg = argv.shift()
 
     if (arg.startsWith('-')) {
       flag = arg[1]
+      if(!flag) {
+        console.error("ArgumentError: sorry, '-' is not acceptable as a valid file name yet!");
+        help()
+      }
+
       value = argv.shift()
       if (!value && flag != 'h') {
         console.error("ArgumentError: Value not provided for -%s.", flag)

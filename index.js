@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const { exit, argv } = require('process')
-const { tlib } = require(__dirname + '/src/Tlib.bs.js')
+const { tlib } = require(__dirname + '/src/Tlib.js')
 
 function help({verbose = false, exit_code = 0} = {})
 {

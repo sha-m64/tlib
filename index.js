@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
+const { basename } = require('path')
 const { exit, argv } = require('process')
 const readline = require('readline')
 
@@ -49,7 +50,7 @@ function read_save_as_names(file_names, cb) {
       return
 
     entry = files[consumed]
-    save_as = new_name + `.${entry}.js`
+    save_as = new_name + `.${basename(entry)}.js`
     if (name_entry.hasOwnProperty(save_as)) {
       console.log('WARN: this name will overwrite', `'${new_names[save_as]}'`)
     }

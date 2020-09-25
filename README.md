@@ -18,4 +18,7 @@ fetch template from git repo
  ```
  $ # save mentioned files under '/tmp/buzz' directory
  $ npx github:sha-m64/tlib -r sha-m64/templates -d /tmp/buzz router controller
+
+ $ # nested lookup
+ $ npx github:sha-m64/tlib -r sha-m64/templates -d /tmp/wolf cave/view nest/honey/service
  ```

@@ -2,6 +2,8 @@
 
 const fs = require('fs')
 const { exit, argv } = require('process')
+const readline = require('readline')
+
 const { tlib } = require(__dirname + '/src/Tlib.js')
 
 function help({verbose = false, exit_code = 0} = {})
@@ -25,8 +27,46 @@ function help({verbose = false, exit_code = 0} = {})
   exit(exit_code)
 }
 
-function parse_args(argv) {
-  let files = [],
+function read_save_as_names(file_names, cb) {
+  const files = Array.from(file_names)
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: true
+  })
+
+  const prompt = (str) => {
+    rl.setPrompt(str)
+    process.stdout.write(str)
+  }
+
+  let name_entry = {}
+  let consumed = 0
+
+  prompt(files[0] + " = ")
+  rl.on('line', (new_name) => {
+    if (new_name.trim() === '')
+      return
+
+    entry = files[consumed]
+    save_as = new_name + `.${entry}.js`
+    if (name_entry.hasOwnProperty(save_as)) {
+      console.log('WARN: this name will overwrite', `'${new_names[save_as]}'`)
+    }
+    name_entry[save_as] = entry
+    consumed++
+    if (consumed === files.length) {
+      rl.close()
+    } else {
+      prompt(files[consumed] + " = ")
+    }
+  }).on('close', () => {
+    cb(Array.from(Object.entries(name_entry)))
+  })
+}
+
+function parse_args(argv, cb) {
+  let files = new Set,
     save_to = process.cwd(),
     repo
 
@@ -62,7 +102,7 @@ function parse_args(argv) {
           break
       }
     } else {
-      files.push(arg)
+      files.add(arg)
     }
   }
 
@@ -71,37 +111,30 @@ function parse_args(argv) {
     help({verbose: true})
   }
 
-  if (files.length === 0) {
+  if (files.size === 0) {
     console.error("ArgumentError: atleast a single file name is expected")
     help({verbose: true})
   }
 
-  return { files, save_to, repo }
+  read_save_as_names(files, (file_saveas) => {
+    cb({ files: file_saveas, save_to, repo })
+  })
 }
 
 function main(argv)
 {
+  parse_args(argv, ({ files, repo, save_to }) => {
+    fs.stat(save_to, (err, stat) => {
+      if (err && err.code === 'ENOENT') {
+        fs.mkdir(save_to, { recursive: true }, (err) => {
+          if (err) throw err;
+          tlib(repo, files, save_to)
+        })
+      }
 
-  const { files, repo, save_to } = parse_args(argv)
+      tlib(repo, files, save_to)
+    })
 
-    // fs.realpath(save_to, (err, absolute_save_to) => {
-    //   if (err) {
-    //     console.error("ArgumentError: issue in resolving path '%s'.", save_to);
-    //     console.error("DUMP\n====\n\n%s", err);
-    //     exit(21);
-    //   }
-      // tlib(repo, files, absolute_save_to)
-    // })
-
-  fs.stat(save_to, (err, stat) => {
-    if (err && err.code === 'ENOENT') {
-      fs.mkdir(save_to, { recursive: true }, (err) => {
-        if (err) throw err;
-        tlib(repo, files, save_to)
-      })
-    }
-
-    tlib(repo, files, save_to)
   })
 }
 

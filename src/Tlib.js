@@ -35,11 +35,11 @@ function matching_template(file_prefix) {
 
 function tlib(repo, files, save_to, branch='master') {
 
-  const download = (file_identifier) => {
+  const download = ([save_as, file_identifier]) => {
     const file = matching_template(file_identifier)
     const http_path = [repo, branch, file].join('/')
     raw_gh_request(http_path, (res) => {
-      res.pipe(fs.createWriteStream(`${save_to}/${file}`))
+      res.pipe(fs.createWriteStream(`${save_to}/${save_as}`))
     })
   }
 

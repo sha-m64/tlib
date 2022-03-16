@@ -5,9 +5,6 @@
   "description": "fetch template from repo",
   "main": "index.js",
   "scripts": {
-    "build": "bsb -make-world",
-    "watch": "bsb -make-world -w",
-    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,7 +17,5 @@
   },
   "homepage": "https://github.com/sha-m64/tlib#readme",
   "devDependencies": {
-    "jest": "^26.4.2",
-    "bs-platform": "^8.2.0"
   }
 }
